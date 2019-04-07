@@ -1,0 +1,12 @@
+{
+    "name": "vladitot/logistics",
+    "type": "project",
+    "authors": [
+        {
+            "name": "Vladimir Zakotnev",
+            "email": "vladitot@gmail.com"
+        }
+    ],
+    "minimum-stability": "stable",
+    "require": {}
+}
