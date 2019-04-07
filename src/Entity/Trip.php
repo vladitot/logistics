@@ -38,6 +38,11 @@ class Trip
      */
     private $courier_id;
 
+    /**
+     * @ORM\Column(type="date")
+     */
+    private $date_return;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -87,6 +92,18 @@ class Trip
     public function setCourierId(?Courier $courier_id): self
     {
         $this->courier_id = $courier_id;
+
+        return $this;
+    }
+
+    public function getDateReturn(): ?\DateTimeInterface
+    {
+        return $this->date_return;
+    }
+
+    public function setDateReturn(\DateTimeInterface $date_return): self
+    {
+        $this->date_return = $date_return;
 
         return $this;
     }

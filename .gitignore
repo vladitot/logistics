@@ -11,3 +11,5 @@
 .idea/*
 laradock/*
 laradock
+
+docker/workspace/xdebug.ini
