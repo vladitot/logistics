@@ -16,7 +16,7 @@
 @endtask
 
 @task('up', ['on' => 'localhost'])
-    {{ $dockerCompose }} up -d workspace php-fpm nginx redis mysql
+    {{ $dockerCompose }} up -d workspace php-fpm nginx redis mysql phpmyadmin
 @endtask
 
 
