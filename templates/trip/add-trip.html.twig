@@ -48,7 +48,7 @@
 
         function loadCouriers(date, region) {
             $.ajax({
-                url: "/trip/load-couriers",
+                url: "{{ path('load-couriers') }}",
                 data: {'date_start': date, 'region_id': region}
             })
                 .done(function (data) {
@@ -79,7 +79,7 @@
                 e.preventDefault();
 
                 $.ajax({
-                    url: "/trip/new",
+                    url: "{{ path('trip_new') }}",
                     data: {
                         'region_id': $('#region_id').val(),
                         'courier_id': $('#courier_id').val(),
@@ -88,6 +88,7 @@
                 })
                     .done(function (data) {
                         $('.loader-wrapper').fadeOut(200);
+                        alert("Сохранено");
                         loadCouriers($('#date_start').val(), $('#region_id').val())
                     })
                     .fail(function (data) {
