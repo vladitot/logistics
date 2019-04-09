@@ -1,0 +1,20 @@
+function runt () {
+        command=$(envoy run --pretend --continue "$1" "${@:2}")
+        bash -c "$command"
+}
+
+_runt_completion() {
+  if [ "${#COMP_WORDS[@]}" != "2" ]; then
+    return
+  fi
+
+    data=$(envoy tasks)
+    data=$(echo $data | sed 's/Available\stasks:\s//g')
+    data=$(echo $data | sed 's/Available\sstories://g')
+    data=$(echo $data | sed 's/\r/ /g')
+    data=$(echo $data | sed 's/\n/ /g')
+    data=$(echo $data | sed 's/\s\s/ /g')
+    COMPREPLY=($(compgen -W "$data" "${COMP_WORDS[1]}"))
+}
+
+complete -F _runt_completion runt

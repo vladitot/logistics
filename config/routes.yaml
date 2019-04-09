@@ -1,3 +1,0 @@
-index_route:
-  path: /
-  controller: App\Controller\BaseController::number
