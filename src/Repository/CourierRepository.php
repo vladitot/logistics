@@ -5,6 +5,7 @@ namespace App\Repository;
 use App\Entity\Courier;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
+use Symfony\Component\DependencyInjection\Tests\Fixtures\includes\HotPath\P1;
 
 /**
  * @method Courier|null find($id, $lockMode = null, $lockVersion = null)
@@ -14,37 +15,28 @@ use Symfony\Bridge\Doctrine\RegistryInterface;
  */
 class CourierRepository extends ServiceEntityRepository
 {
+
     public function __construct(RegistryInterface $registry)
     {
         parent::__construct($registry, Courier::class);
     }
 
-    // /**
-    //  * @return Courier[] Returns an array of Courier objects
-    //  */
-    /*
-    public function findByExampleField($value)
-    {
-        return $this->createQueryBuilder('c')
-            ->andWhere('c.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('c.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
-        ;
-    }
-    */
 
-    /*
-    public function findOneBySomeField($value): ?Courier
+    /**
+     * Получение всех курьеров, кроме перечисленных
+     * @param $courierIds
+     * @return Courier[]|mixed
+     */
+    public function getRestOfThis($courierIds)
     {
-        return $this->createQueryBuilder('c')
-            ->andWhere('c.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
+        if (count($courierIds)>0) {
+            return $this->createQueryBuilder('fc')
+                ->where('fc.id not in ('.implode(',', $courierIds).')')
+                ->getQuery()
+                ->getResult();
+        } else {
+            return $this->findAll();
+        }
+
     }
-    */
 }

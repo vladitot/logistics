@@ -1,0 +1,66 @@
+{% extends 'layout.html.twig' %}
+
+{% block body %}
+
+    <form method="get" action="">
+        <div class="container">
+            <div class="row">
+                <div class="form-group col-3">
+                    <label for="date_start">Дата от:</label>
+                    <input type="text" class="form-control" id="date_start" name="date_start"
+                           placeholder="Выберите дату" value="{{ dateStart }}">
+                </div>
+                <div class="form-group col-3">
+                    <label for="date_end">Дата по:</label>
+                    <input type="text" class="form-control" id="date_end" name="date_end" placeholder="Выберите дату"
+                           value="{{ dateEnd }}">
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-3">
+                    <button type="submit" class="btn btn-primary">Показать</button>
+                </div>
+            </div>
+        </div>
+
+
+    </form>
+
+
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th>Номер поездки</th>
+            <th>Имя курьера</th>
+            <th>Отбытие</th>
+            <th>Прибытие на место</th>
+            <th>Возвращение на базу</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for trip in trips %}
+            <tr>
+                <td>{{ trip.id }}</td>
+                <td>{{ trip.getCourierId().title }}</td>
+                <td>{{ trip.dateStart ? trip.dateStart|date('Y-m-d') : '' }}</td>
+                <td>{{ trip.dateEnd ? trip.dateEnd|date('Y-m-d') : '' }}</td>
+                <td>{{ trip.dateReturn ? trip.dateReturn|date('Y-m-d') : '' }}</td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="5">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('trip_add') }}" class="btn btn-info">Добавить поездку</a>
+
+
+    <script>
+        $(function () {
+            $("#date_start").datepicker();
+            $("#date_end").datepicker();
+        });
+    </script>
+{% endblock %}

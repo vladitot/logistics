@@ -1,0 +1,101 @@
+{% extends 'layout.html.twig' %}
+
+{% block body %}
+
+    <form method="get" action="{{ path('trip_new') }}">
+        <div class="container">
+            <div class="row">
+                <div class="form-group col-3">
+                    <label for="date_start">Когда нужно отправить груз?</label>
+                    <input type="text" class="form-control" id="date_start" name="date_start"
+                           placeholder="Выберите дату">
+                </div>
+            </div>
+            <div class="row">
+                <div class="form-group col-3">
+                    <label for="region_id">Куда нужно отправить груз?</label>
+                    <select name="region_id" id="region_id" class="form-control">
+                        {% for region in regions %}
+                            <option value="{{ region.id }}">{{ region.title }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+            <div class="row">
+                <div class="form-group col-3">
+                    <label for="courier_id">Курьер (из свободных на эту дату)</label>
+                    <select name="courier_id" id="courier_id" class="form-control">
+                        <option value="0">Выберите дату и регион, чтобы показать свободных курьеров</option>
+                    </select>
+                </div>
+            </div>
+            <div class="row">
+                <div class="form-group col-3">
+                    <button class="btn btn-info saveTrip">
+                        Сохранить поездку
+                    </button>
+                </div>
+                <a href="{{ path('trip_index') }}" class="btn btn-success">Вернуться к просмотру</a>
+            </div>
+        </div>
+    </form>
+
+    <div class="loader-wrapper" id="loader-1">
+        <div id="loader"></div>
+    </div>
+
+    <script>
+
+        function loadCouriers(date, region) {
+            $.ajax({
+                url: "/trip/load-couriers",
+                data: {'date_start': date, 'region_id': region}
+            })
+                .done(function (data) {
+                    $('#courier_id').empty();
+                    data.forEach(function (item) {
+                        $('#courier_id').append('<option value="' + item['id'] + '">' + item['title'] + '</option>');
+                    });
+                })
+                .fail(function (data) {
+                    $('#courier_id').empty();
+                    console.log("error: " + data);
+                });
+        }
+
+        $(function () {
+            $("#date_start").datepicker({
+                onSelect: function onSelect(fd, date) {
+                    loadCouriers(date.getDate() + '.' + (date.getMonth() + 1) + '.' + date.getFullYear(), $('#region_id').val());
+                }
+            });
+
+            $('#region_id').on('change', function () {
+                loadCouriers($("#date_start").val(), $(this).val())
+            });
+
+            $('.saveTrip').on('click', function (e) {
+                $('.loader-wrapper').fadeIn(200);
+                e.preventDefault();
+
+                $.ajax({
+                    url: "/trip/new",
+                    data: {
+                        'region_id': $('#region_id').val(),
+                        'courier_id': $('#courier_id').val(),
+                        'date_start': $('#date_start').val()
+                    }
+                })
+                    .done(function (data) {
+                        $('.loader-wrapper').fadeOut(200);
+                        loadCouriers($('#date_start').val(), $('#region_id').val())
+                    })
+                    .fail(function (data) {
+                        $('.loader-wrapper').fadeOut(200);
+                        alert("не удалось сохранить поездку");
+                        loadCouriers($('#date_start').val(), $('#region_id').val())
+                    });
+            });
+        });
+    </script>
+{% endblock %}
